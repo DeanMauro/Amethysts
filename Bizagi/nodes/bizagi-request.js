@@ -1,3 +1,5 @@
+const Bizagi = require('../lib/bizagi.js');
+
 module.exports = function(RED) {
     function BizagiRequestNode(config) {
         RED.nodes.createNode(this,config);
@@ -7,5 +9,24 @@ module.exports = function(RED) {
             node.send(msg);
         });
     }
+    
+    function BizagiStudioNode(n) {
+        RED.nodes.createNode(this);
+        var creds = this.credentials;
+        
+        
+    }
+
     RED.nodes.registerType("bizagi-request",BizagiRequestNode);
+
+    /*Register connection*/
+    RED.nodes.registerType("bizagi-studio",BizagiStudioNode, {
+        credentials: {
+            url: {type: "text"},
+            clientId: {type: "text"},
+            clientSecret: {type: "password"}
+        }
+    });
 }
+
+// 20 Min TIMEOUT

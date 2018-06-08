@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A wrapper for the Bizagi API",
   "main": "index.js",
+  "dependencies": {
+    "xmlhttprequest": "1.8.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,9 +15,12 @@
   ],
   "author": "Dean Mauro",
   "license": "ISC",
-  "node-red" : {
-        "nodes": {
-            "bizagi-request": "nodes/bizagi-request.js"
-        }
+  "node-red": {
+    "nodes": {
+      "bizagi-request": "nodes/bizagi-request.js"
+    }
+  },
+  "directories": {
+    "lib": "lib"
   }
 }

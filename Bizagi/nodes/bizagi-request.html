@@ -2,12 +2,13 @@
     RED.nodes.registerType('bizagi-request',{
         category: 'amethysts',
         color: '#a6bbcf',
+        icon: "Bizagi.png",
         defaults: {
-            name: {value:""}
+            name: {value:""},
+            studio: {value:"", type:"bizagi-studio"},
         },
         inputs:1,
         outputs:1,
-        icon: "file.png",
         label: function() {
             return this.name||"bizagi-request";
         }
@@ -19,8 +20,54 @@
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <div class="form-row">
+        <label for="node-input-studio"><i class="fa fa-object-group"></i> Studio</label>
+        <input type="text" id="node-input-studio" placeholder="Connection">
+    </div>
 </script>
 
 <script type="text/x-red" data-help-name="bizagi-request">
     <p>A wrapper for the Bizagi API</p>
+</script>
+
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('bizagi-studio',{
+        category: 'config',
+        defaults: {
+            name: {value:""}
+        },
+        credentials: {
+            url: {type: "text"},
+            clientId: {type: "text"},
+            clientSecret: {type: "password"} 
+        },
+        label: function() {
+            return this.name || this.url;
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bizagi-studio">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-url"><i class="fa fa-globe"></i> URL</label>
+        <input type="text" id="node-input-url" placeholder="https://[your_server]/[your_project]">
+    </div>
+    <div class="form-row">
+        <label for="node-input-clientId"><i class="fa fa-id-badge"></i> Client ID</label>
+        <input type="text" id="node-input-clientId">
+    </div>
+    <div class="form-row">
+        <label for="node-input-clientSecret"><i class="fa fa-lock"></i> Client Secret</label>
+        <input type="password" id="node-input-clientSecret">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="bizagi-studio">
+    <p>The connection to Bizagi Studio</p>
 </script>
