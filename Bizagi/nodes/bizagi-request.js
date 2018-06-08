@@ -20,13 +20,7 @@ module.exports = function(RED) {
     RED.nodes.registerType("bizagi-request",BizagiRequestNode);
 
     /*Register connection*/
-    RED.nodes.registerType("bizagi-studio",BizagiStudioNode, {
-        credentials: {
-            url: {type: "text"},
-            clientId: {type: "text"},
-            clientSecret: {type: "password"}
-        }
-    });
+    RED.nodes.registerType("bizagi-studio",BizagiStudioNode);
 }
 
 // 20 Min TIMEOUT

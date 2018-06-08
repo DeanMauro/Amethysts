@@ -5,7 +5,7 @@
         icon: "Bizagi.png",
         defaults: {
             name: {value:""},
-            studio: {value:"", type:"bizagi-studio"},
+            studio: {value:"", type:"bizagi-studio", required: true},
         },
         inputs:1,
         outputs:1,
@@ -39,9 +39,9 @@
             name: {value:""}
         },
         credentials: {
-            url: {type: "text"},
-            clientId: {type: "text"},
-            clientSecret: {type: "password"} 
+            url: {type: "text", required: true},
+            clientId: {type: "text", required: true},
+            clientSecret: {type: "password", required: true} 
         },
         label: function() {
             return this.name || this.url;
@@ -51,20 +51,20 @@
 
 <script type="text/x-red" data-template-name="bizagi-studio">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name">
     </div>
     <div class="form-row">
-        <label for="node-input-url"><i class="fa fa-globe"></i> URL</label>
-        <input type="text" id="node-input-url" placeholder="https://[your_server]/[your_project]">
+        <label for="node-config-input-url"><i class="fa fa-globe"></i> URL</label>
+        <input type="text" id="node-config-input-url" placeholder="https://[your_server]/[your_project]">
     </div>
     <div class="form-row">
-        <label for="node-input-clientId"><i class="fa fa-id-badge"></i> Client ID</label>
-        <input type="text" id="node-input-clientId">
+        <label for="node-config-input-clientId"><i class="fa fa-id-badge"></i> Client ID</label>
+        <input type="text" id="node-config-input-clientId">
     </div>
     <div class="form-row">
-        <label for="node-input-clientSecret"><i class="fa fa-lock"></i> Client Secret</label>
-        <input type="password" id="node-input-clientSecret">
+        <label for="node-config-input-clientSecret"><i class="fa fa-lock"></i> Client Secret</label>
+        <input type="password" id="node-config-input-clientSecret">
     </div>
 </script>
 
