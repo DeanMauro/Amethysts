@@ -6,7 +6,7 @@ class Bizagi {
   constructor(clientID, clientSecret, url) {
     this.url = url;
     this.token = null;
-    this.token = this.getToken(clientID, clientSecret);
+    this.getToken(clientID, clientSecret);
     this.start = Date.now();
   }
 
@@ -24,11 +24,14 @@ class Bizagi {
     
     // Authentication is synchronous. Return token
     let arr = JSON.parse(xhttp.responseText);
-    return arr["access_token"]
+    this.token = arr["access_token"];
   }
 
 
-  request(p) {
+  request(p, node) {
+    // Refresh token if needed
+    this.refreshToken(node);
+
   	var xhttp = new XMLHttpRequest();
   	xhttp.withCredentials = true;
 
@@ -49,19 +52,12 @@ class Bizagi {
 
 
   refreshToken(node) {
-    if (!this.start || (Date.now() - this.start) >= 1500000)
-      Bizagi.refresh(node);
-  }
-
-
-  static refresh(node) {
-    var creds = node.credentials;
-    var instance = new Bizagi(creds.clientID, 
-                              creds.clientSecret,
-                              creds.url);
-    
-    node.context().flow.set("bizagi", instance);
-    console.log("Refreshed Token");
+    if (!this.start || (Date.now() - this.start) >= 900000) {
+      var creds = node.credentials;
+      this.getToken(creds.clientID, creds.clientSecret);
+      
+      console.log("Refreshed Token");
+    }
   }
 
 }

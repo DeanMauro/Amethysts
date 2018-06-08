@@ -5,7 +5,7 @@
         icon: "Bizagi.png",
         defaults: {
             name: {value:""},
-            studio: {value:"", type:"bizagi-studio", required: true},
+            studio: {value:"", type:"bizagi-connection", required: true},
         },
         inputs:1,
         outputs:1,
@@ -33,7 +33,7 @@
 
 
 <script type="text/javascript">
-    RED.nodes.registerType('bizagi-studio',{
+    RED.nodes.registerType('bizagi-connection',{
         category: 'config',
         defaults: {
             name: {value:""}
@@ -49,7 +49,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="bizagi-studio">
+<script type="text/x-red" data-template-name="bizagi-connection">
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name">
@@ -68,6 +68,6 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="bizagi-studio">
+<script type="text/x-red" data-help-name="bizagi-connection">
     <p>The connection to Bizagi Studio</p>
 </script>
