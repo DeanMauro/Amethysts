@@ -29,12 +29,17 @@ class Api {
 		return path;
 	}
 
-	static Alerts(action) {
+	static Processes(action) {
 		return {
-			GetAll: ["GET", "odata/Alerts"],
-			GetUnreadCount: ["GET", "odata/Alerts/UiPath.Server.Configuration.OData.GetUnreadCount()"],
-			MarkAsRead: ["POST", "odata/Alerts/UiPath.Server.Configuration.OData.MarkAsRead"],
-			RaiseProcessAlert: ["POST", "/odata/Alerts/UiPath.Server.Configuration.OData.RaiseProcessAlert"]
+			GetAll: ["GET", "odata/data/processes"],
+			GetOne: ["GET", "odata/data/processes([id_process])"],
+			GetAllRelatedEntities: ["GET", "odata/data/processes([id_process])/relatedEntities"],
+			GetOneRelatedEntity: ["GET", "odata/data/processes([id_process])/relatedEntities([id_related])"],
+			GetAllValues: ["GET", "odata/data/processes([id_process])/relatedEntities([id_related])/values"],
+			GetAllActions: ["GET", "odata/data/processes([id_process])/actions"],
+			StartProcess: ["POST", "odata/data/processes([id_process])/start"],
+			GetCases: ["GET", "odata/data/processes([id_process])/cases"],
+			GetOneCase: ["GET", "odata/data/processes([id_process])/cases([id_case])"]
 		}[action]
 	}
 }
