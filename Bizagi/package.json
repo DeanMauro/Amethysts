@@ -17,7 +17,8 @@
   "license": "ISC",
   "node-red": {
     "nodes": {
-      "bizagi-request": "nodes/bizagi-request.js"
+      "bizagi-connection": "nodes/connection.js",
+      "bizagi-request": "nodes/request.js"
     }
   },
   "directories": {
