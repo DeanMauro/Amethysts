@@ -1,6 +1,6 @@
 <script type="text/javascript">
     RED.nodes.registerType('bizagi-request',{
-        category: 'amethysts',
+        category: 'bizagi',
         color: '#a6bbcf',
         icon: "Bizagi.png",
         defaults: {
@@ -13,8 +13,9 @@
         },
         inputs:1,
         outputs:1,
+        paletteLabel: "request",
         label: function() { 
-                var label = this.name || "bizagi-request";
+                var label = this.name || "request";
                 return (label.length <= 20) ? label : (label.substring(0,18) + "...");
             },
         oneditprepare: function() {

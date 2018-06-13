@@ -3,10 +3,10 @@ const Bizagi = require('../lib/bizagi.js');
 module.exports = function(RED) {
 
     function BizagiConnectionNode(n) {
-        RED.nodes.createNode(this);
+        RED.nodes.createNode(this, n);
 
         var creds = this.credentials;
-        this.bizagi = new Bizagi(creds.clientID, creds.clientSecret, creds.url);
+        this.bizagi = new Bizagi(creds.clientId, creds.clientSecret, creds.url);
     }
 
     

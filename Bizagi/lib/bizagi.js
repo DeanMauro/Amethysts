@@ -1,19 +1,20 @@
 "use strict";
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var btoa = require('btoa');
 
 class Bizagi {
   
-  constructor(clientID, clientSecret, url) {
-    this.url = url;
+  constructor(clientId, clientSecret, url) {
+    this.url = url.replace(/\/$/, "");
     this.token = null;
-    this.getToken(clientID, clientSecret);
+    this.getToken(clientId, clientSecret);
     this.start = Date.now();
   }
 
 
-  getToken(clientID, clientSecret) {
+  getToken(clientId, clientSecret) {
     var xhttp = new XMLHttpRequest();
-    var encoded = btoa(clientID + ":" + clientSecret);
+    var encoded = btoa(clientId + ":" + clientSecret);
 
     // Compose request
     xhttp.withCredentials = true;
@@ -21,16 +22,16 @@ class Bizagi {
     xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhttp.setRequestHeader('Authorization', 'Basic ' + encoded);
     xhttp.send('grant_type=client_credentials&scope=api');
-    
+
     // Authentication is synchronous. Return token
     let arr = JSON.parse(xhttp.responseText);
     this.token = arr["access_token"];
   }
 
 
-  request(p, node) {
+  request(p, connection) {
     // Refresh token if needed
-    this.refreshToken(node);
+    this.refreshToken(connection);
 
   	var xhttp = new XMLHttpRequest();
   	xhttp.withCredentials = true;
@@ -44,18 +45,21 @@ class Bizagi {
     };
 
 	  // Compose request
-    xhttp.open(p["type"].toUpperCase(), this.url + p["extension"], true);
+    xhttp.open(p["type"].toUpperCase(), this.url + '/' + p["extension"], true);
     xhttp.setRequestHeader('Content-Type', p["contentType"] || 'application/json');
   	xhttp.setRequestHeader('Authorization', 'Bearer ' + (this.token || '') );
+    xhttp.setRequestHeader('User-Agent', '' );
     xhttp.send(p["body"]);
   }
 
 
-  refreshToken(node) {
-    if (!this.start || (Date.now() - this.start) >= 900000) {
-      var creds = node.credentials;
-      this.getToken(creds.clientID, creds.clientSecret);
-      
+  refreshToken(connection) {
+    var start = connection.bizagi
+    if (!this.token || !this.start || (Date.now() - this.start) >= 900000) {
+      var creds = connection.credentials;
+      console.log(creds);
+      this.getToken(creds.clientId, creds.clientSecret);
+
       console.log("Refreshed Token");
     }
   }

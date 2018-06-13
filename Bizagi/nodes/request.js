@@ -1,4 +1,5 @@
-const Bizagi = require('../lib/bizagi.js');
+require('../lib/bizagi.js');
+const Api = require('../lib/api.js');
 
 module.exports = function(RED) {
 
@@ -9,11 +10,13 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
          
             // Use connection to make calls
-            var connection = RED.nodes.getNode(config.connection);
+            var connection = RED.nodes.getNode(config.studio);
 
             // Check that connection exists
             if (!connection)
                 errorOut(node, "Your request node is all alone! Please specify a connection before making requests.");
+            else
+                var biz = connection.bizagi;
             
             var body;
             var callback = function(x, status) { 
@@ -52,10 +55,10 @@ module.exports = function(RED) {
                     if (body && body["Id"]) body["Id"] = parseInt(body["Id"]);
 
                     // Fire!
-                    orch.request({ type: endpoint[0], 
+                    biz.request({ type: endpoint[0], 
                                    extension: extension,
                                    body: JSON.stringify(body),
-                                   callback: callback });
+                                   callback: callback }, connection);
                 } catch(e) {
                     errorOut(node, e);
                 }
@@ -64,10 +67,10 @@ module.exports = function(RED) {
             // JSON Input
             else if (msg.payload.action && msg.payload.extension) {
                 
-                orch.request({ type: msg.payload.action, 
+                biz.request({ type: msg.payload.action, 
                                extension: msg.payload.extension,
                                body: JSON.stringify(msg.payload.body) || "",
-                               callback: callback });
+                               callback: callback }, connection);
             } 
 
             // Bad Input
