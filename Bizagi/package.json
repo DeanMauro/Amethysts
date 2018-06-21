@@ -19,8 +19,7 @@
   "node-red": {
     "nodes": {
       "bizagi-connection": "nodes/connection.js",
-      "bizagi-request": "nodes/request.js",
-      "bizagi-startProcess": "nodes/startProcess.js"
+      "bizagi-request": "nodes/request.js"
     }
   },
   "directories": {

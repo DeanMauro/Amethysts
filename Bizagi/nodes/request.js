@@ -30,7 +30,6 @@ module.exports = function(RED) {
                     // Convert fields provided through msg variable
                     if (config.category.startsWith("Msg")) {
                         config.category = msg.payload.category;
-                        config.action = msg.payload.action;
                     }
 
                     // Select Params
@@ -42,11 +41,10 @@ module.exports = function(RED) {
                         body = {};
 
                     // Check that a category and action were specified
-                    if (!config.category) throw "That request was rather vague. Please specify a category in the node's properties."
-                    if (!config.action) throw "That request was rather vague. Please specify an action in the node's properties."
+                    if (!config.category) throw "That request was rather vague. Please specify an action in the node's properties."
 
                     // Get endpoint info
-                    var endpoint = Api[config.category](config.action);
+                    var endpoint = Api['Actions'](config.category);
 
                     // Add path & query params if needed
                     var extension = Api.fillPath(endpoint[0], endpoint[1], body);

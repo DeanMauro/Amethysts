@@ -1,14 +1,13 @@
 <script type="text/javascript">
     RED.nodes.registerType('bizagi-request',{
         category: 'bizagi',
-        color: '#a6bbcf',
+        color: '#75838B',
         icon: "Bizagi.png",
         defaults: {
             name: {value:""},
             studio: {value:"", type:"bizagi-connection", required: true},
             nameSet: {value: false},
             category: {value:"UseInput"},
-            action: {value: ""},
             params: {value: [{key: "", type: "str", value: ""}]}
         },
         inputs:1,
@@ -39,6 +38,14 @@
                     if (data.value) {
                         $(value).typedInput('type', data.type);
                         $(value).typedInput('value', data.value);
+                    } else if (data.key == 'startParameters') {
+                        $(value).typedInput('type', 'json');
+                        $(value).typedInput('value', '[             \
+                               {                                    \
+                                   "xpath": "[xpath_name]",         \
+                                   "value": "[value_for_xpath]"     \
+                               }                                    \
+                           ]') 
                     }
                     
                 },
@@ -50,42 +57,45 @@
             // Fill in persisted values
             if (this.nameSet) $('#name').val(this.name);
             $('#category').val(this.category || "UseInput");
-            $('#action').val(this.action || "");
             try {
                 for (var row of this.params)
                     $("#node-input-param-container").editableList('addItem', row);
             } catch(TypeError) {}
 
-            // Fill in appropriate actions and set field visibility...
-            function checkCategory(a, b) {
-                if ($('#category').val() == 'UseInput') {
-                    a();
-                } else {
-                    var category = $('#category').val();
-                    $('#action option:not(.'+category+')').hide();
-                    $('#action option.'+category).show();
 
-                    if ($(".useCategory").css('opacity') < 1) b();
-                }
-            }
-
-            // ...when opening node
+            // When opening node
             checkCategory(()=>{ $(".useCategory").css('opacity', 0); },
                           ()=>{ $(".useCategory").css('opacity', 1); });
 
             // ...or when the category changes
             $("#category").off().on('change', function() {
-                $("#action").val('');   // Clear selected action
 
                 checkCategory(()=>{ $(".useCategory").removeClass('flipInY').addClass('flipOutY'); },
                               ()=>{ $(".useCategory").removeClass('flipOutY').addClass('flipInY'); });
             });
 
+            // ...fill in appropriate actions and set field visibility
+            function checkCategory(a, b) {
+                if (!$('#category option:selected').data('params')) {
+
+                    if ($(".useCategory").css('opacity') > 0) a();
+                } else {
+                    changeParams($('#category option:selected').data('params'));
+
+                    if ($(".useCategory").css('opacity') < 1) b();
+                }
+            }
+
+            function changeParams(params) {
+                $("#node-input-param-container").editableList('empty');
+
+                for (var item of params)
+                    $("#node-input-param-container").editableList('addItem', {key: `${item}`, type: "str", value: ""});
+            }
         },
         oneditsave: function() {
             var node = this;
             node.category = $('#category').val();   // Save Category
-            node.action = $("#action").val();       // Save Action
 
             // Save Name
             node.nameSet = false;
@@ -95,7 +105,7 @@
             } else if (/UseInput|Msg/.test(node.category))
                 var name = "request";
             else
-                var name = node.category + ": " + $("#action :selected").text();
+                var name = node.category;
             
             node.name = name;
             
@@ -138,36 +148,15 @@
     </div>
 
     <div class="form-row">
-        <label for="category"><i class="fa fa-th"></i> Category</label>
+        <label for="category"><i class="fa fa-bolt"></i> Action</label>
         <select id="category">
-            <option value="UseInput">Use Input</option>
-            <option value="MsgPayload">Msg.payload.category</option>
-            <option value="Processes">Processes</option>
-        </select>
-    </div>
-
-    <div class="form-row useCategory animated">
-        <label for="action"><i class="fa fa-bolt"></i> Action</label>
-        <select id="action">
-            <!-- General -->
-            <option value="MsgPayload" class="MsgPayload">Msg.payload.action</option>
-            <option value="GetAll" class="Processes">Get All</option>
-            <option value="GetOne" class="Processes">Get One By ID</option>
-            <option value="Create" class="">Create</option>
-            <option value="Delete" class="">Delete</option>
-            <option value="Edit" class="">Edit</option>
-            <option value="Update" class="">Update</option>
-            <!-- Processes -->
-            <option value="GetAllRelatedEntities" class="Processes">Get All Related Entities</option>
-            <option value="GetOneRelatedEntity" class="Processes">Get Related Entity By ID</option>
-            <option value="GetAllValues" class="Processes">Get All Values For Related Entity</option>
-            <option value="GetOneValue" class="Processes">Get Value By ID</option>
-            <option value="GetAllActions" class="Processes">Get All Actions</option>
-            <option value="GetOneAction" class="Processes">Get Action By ID</option>
-            <option value="StartProcess" class="Processes">Start Process</option>
-            <option value="GetCases" class="Processes">Get All Pending Cases</option>
-            <option value="GetOneCase" class="Processes">Get Case By ID</option>
-            <!-- <option value="" class="Processes"></option> -->
+            <option value="UseInput" class="noParams">Use Input</option>
+            <option value="MsgPayload" class="MsgPayload noParams">Msg.payload.action</option>
+            <option value="GetProcesses" class="Processes noParams">Get Processes</option>
+            <option value="StartProcess" class="Processes" data-params='["startParameters", "id_process"]'>Start Process</option>
+            <option value="GetCasesForProcess" class="" data-params='["id_process"]'>Get Cases for Process</option>
+            <option value="GetWorkItemsForCase" class="" data-params='["id_case"]'>Get Work Items for Case</option>
+            <option value="AdvanceCase" class="" data-params='["startParameters", "id_case", "id_workitem"]'>Advance Case</option>
         </select>
     </div>
 
@@ -261,6 +250,7 @@
     .animated {
       animation-duration: 0.75s;
       animation-fill-mode: both;
+      margin-bottom: 0;
     }
 
     .flipInY {
@@ -296,10 +286,7 @@
         transform: perspective(400px);
       }
 
-      30% {
-        transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
-        opacity: 1;
-      }
+
 
       to {
         transform: perspective(400px) rotate3d(0, 1, 0, 90deg);

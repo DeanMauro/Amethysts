@@ -29,17 +29,13 @@ class Api {
 		return path;
 	}
 
-	static Processes(action) {
+	static Actions(action) {
 		return {
-			GetAll: ["GET", "odata/data/processes"],
-			GetOne: ["GET", "odata/data/processes([id_process])"],
-			GetAllRelatedEntities: ["GET", "odata/data/processes([id_process])/relatedEntities"],
-			GetOneRelatedEntity: ["GET", "odata/data/processes([id_process])/relatedEntities([id_related])"],
-			GetAllValues: ["GET", "odata/data/processes([id_process])/relatedEntities([id_related])/values"],
-			GetAllActions: ["GET", "odata/data/processes([id_process])/actions"],
+			GetProcesses: ["GET", "odata/data/processes"],
 			StartProcess: ["POST", "odata/data/processes([id_process])/start"],
-			GetCases: ["GET", "odata/data/processes([id_process])/cases"],
-			GetOneCase: ["GET", "odata/data/processes([id_process])/cases([id_case])"]
+			GetCasesForProcess: ["GET", "odata/data/processes([id_process])/cases"],
+			GetWorkItemsForCase: ["GET", "odata/data/cases([id_case])/workitems"],
+			AdvanceCase: ["POST", "odata/data/cases([id_case])/workitems([id_workitem])/next"]
 		}[action]
 	}
 }
