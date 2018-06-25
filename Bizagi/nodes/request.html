@@ -35,6 +35,7 @@
                         default: "str",
                         types: ["str","num","bool","json","date","msg","flow","global",'jsonata']
                     });
+
                     if (data.value) {
                         $(value).typedInput('type', data.type);
                         $(value).typedInput('value', data.value);
@@ -65,23 +66,25 @@
 
             // When opening node
             checkCategory(()=>{ $(".useCategory").css('opacity', 0); },
-                          ()=>{ $(".useCategory").css('opacity', 1); });
+                          ()=>{ $(".useCategory").css('opacity', 1); },
+                          false);
 
             // ...or when the category changes
             $("#category").off().on('change', function() {
 
                 checkCategory(()=>{ $(".useCategory").removeClass('flipInY').addClass('flipOutY'); },
-                              ()=>{ $(".useCategory").removeClass('flipOutY').addClass('flipInY'); });
+                              ()=>{ $(".useCategory").removeClass('flipOutY').addClass('flipInY'); },
+                              true);
             });
 
             // ...fill in appropriate actions and set field visibility
-            function checkCategory(a, b) {
+            function checkCategory(a, b, c) {
                 if (!$('#category option:selected').data('params')) {
 
                     if ($(".useCategory").css('opacity') > 0) a();
                 } else {
-                    changeParams($('#category option:selected').data('params'));
-
+                    
+                    if (c) changeParams($('#category option:selected').data('params'));
                     if ($(".useCategory").css('opacity') < 1) b();
                 }
             }
@@ -190,8 +193,6 @@
         <h6>Open the node and fill in the following properties:</h6>
         <dt>Category<span class="property-type">String</span></dt>
         <dd>The Bizagi element you wish to interact with. If <code>Use Input</code> is selected, the node will default to Option 2 and expect a JSON input. Otherwise, it will use the selected values.</dd>
-        <dt>Action<span class="property-type">String</span></dt>
-        <dd>The action to take in the above category.</dd>
         <dt>Parameters<span class="property-type">List</span></dt>
         <dd>Certain actions require more information. Use the add button to prepare all required parameters.</dd>
     </dl>
@@ -208,15 +209,15 @@
             <pre>
 {
  "action": "POST",
- "extension": "odata/data/relevants([id_relevant])/start",
+ "extension": "odata/data/processes(id)/start",
  "body": {
-           "startParameters": 
-            [{
-               "xpath": "[xpath_name]",
-               "type": "[xpath_datatype]",
-               "value": "[value_for_xpath]"
-            }]
-         }
+   "startParameters": 
+     [{
+       "xpath": "x",
+       "type": "t",
+       "value": "v"
+     }]
+  }
 }
             </pre>
         </dl>
@@ -241,6 +242,7 @@
     .red-ui-editableList-container {
         max-height: 40vh !important;
         height: auto !important;
+        overflow: auto !important;
     }
 
     .useCategory {

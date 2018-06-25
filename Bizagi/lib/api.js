@@ -7,10 +7,12 @@ class Api {
 		for (var target of (path.match(/\[\w+\]/g) || [])) {
 			var key = target.slice(1, -1);
 
-			if (params[key])
+			if (params[key]) {
 				path = path.replace(target, params[key]);
-			else
+				delete params[key];
+			} else {
 				throw "Path Parameter '" + key + "' is missing. Please add it and try again.";
+			}
 		}
 
 		/*Query Params*/
@@ -26,7 +28,7 @@ class Api {
 				path += qString.slice(0, -1)
 		}
 
-		return path;
+		return [path, params];
 	}
 
 	static Actions(action) {
