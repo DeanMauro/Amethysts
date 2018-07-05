@@ -4,8 +4,8 @@ module.exports = function(RED) {
 
     function BizagiConnectionNode(n) {
         RED.nodes.createNode(this, n);
-
         var creds = this.credentials;
+
         this.bizagi = new Bizagi(creds.clientId, creds.clientSecret, creds.url);
     }
 

@@ -100,6 +100,7 @@
             var node = this;
             node.category = $('#category').val();   // Save Category
 
+            console.log(this);
             // Save Name
             node.nameSet = false;
             if ($('#name').val()) {
@@ -172,11 +173,11 @@
 
 <!-- DESCRIPTION -->
 <script type="text/x-red" data-help-name="bizagi-request">
-    <p>A direct line to Bizagi Studio's Work Portal</p>
+    <p>A direct line to your Bizagi data model</p>
 
     <h3>Details</h3>
     <dl class="message-properties">
-        <p>You can instruct this node to contact Studio in one of two ways: </p>
+        <p>This node can make requests to a Bizagi model in one of two ways: </p>
         <ul>
           <li>by filling in the node's properties OR</li>
           <li>by inputting a JSON structure with the appropriate fields for an API call.</li>
@@ -192,7 +193,7 @@
     <dl class="message-properties">
         <h6>Open the node and fill in the following properties:</h6>
         <dt>Category<span class="property-type">String</span></dt>
-        <dd>The Bizagi element you wish to interact with. If <code>Use Input</code> is selected, the node will default to Option 2 and expect a JSON input. Otherwise, it will use the selected values.</dd>
+        <dd>The element you wish to interact with. If <code>Use Input</code> is selected, the node will default to Option 2 and expect a JSON input. Otherwise, it will use the selected values.</dd>
         <dt>Parameters<span class="property-type">List</span></dt>
         <dd>Certain actions require more information. Use the add button to prepare all required parameters.</dd>
     </dl>
@@ -226,7 +227,7 @@
 
     <h3>Output</h3>
     <dl class="message-properties">
-        <dt>Studio's Response<span class="property-type">JSON</span></dt>
+        <dt>The model's response<span class="property-type">JSON</span></dt>
     </dl>
 </script>
 

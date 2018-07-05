@@ -24,8 +24,12 @@ class Bizagi {
     xhttp.send('grant_type=client_credentials&scope=api');
 
     // Authentication is synchronous. Return token
-    let arr = JSON.parse(xhttp.responseText);
-    this.token = arr["access_token"];
+    try {
+      let arr = JSON.parse(xhttp.responseText);
+      this.token = arr["access_token"];
+    } catch (e) {
+      throw new Error("Error connecting. Please ensure your Bizagi Work Portal is running.");
+    }
   }
 
 
@@ -57,7 +61,6 @@ class Bizagi {
     var start = connection.bizagi
     if (!this.token || !this.start || (Date.now() - this.start) >= 900000) {
       var creds = connection.credentials;
-      console.log(creds);
       this.getToken(creds.clientId, creds.clientSecret);
 
       console.log("Refreshed Token");
